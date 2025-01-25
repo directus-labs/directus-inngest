@@ -1,0 +1,11 @@
+{
+	"name": "directus-with-inngest",
+	"version": "1.0.0",
+	"description": "",
+	"author": "",
+	"directusTemplate": true,
+	"files": [
+		"src"
+	],
+	"templateName": "Directus with Inngest"
+}

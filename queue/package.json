@@ -1,0 +1,54 @@
+{
+	"name": "queue",
+	"type": "module",
+	"version": "1.0.0",
+	"packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0",
+	"description": "Example of using Inngest with Directus",
+	"keywords": [
+		"directus",
+		"directus-extension",
+		"directus-extension-bundle"
+	],
+	"icon": "extension",
+	"files": [
+		"dist"
+	],
+	"directus:extension": {
+		"type": "bundle",
+		"path": {
+			"app": "dist/app.js",
+			"api": "dist/api.js"
+		},
+		"entries": [
+			{
+				"type": "endpoint",
+				"name": "inngest",
+				"source": "src/inngest/index.ts"
+			},
+			{
+				"type": "hook",
+				"name": "hooks",
+				"source": "src/hooks/index.ts"
+			}
+		],
+		"host": "^10.10.0"
+	},
+	"scripts": {
+		"build": "directus-extension build",
+		"dev": "directus-extension build -w --no-minify",
+		"link": "directus-extension link",
+		"add": "directus-extension add"
+	},
+	"dependencies": {
+		"deepl-node": "^1.16.0",
+		"express": "^4.21.2",
+		"inngest": "^3.30.0"
+	},
+	"devDependencies": {
+		"@directus/extensions-sdk": "13.0.0",
+		"@directus/types": "^13.0.0",
+		"@types/node": "^22.10.7",
+		"pino": "^9.6.0",
+		"typescript": "^5.7.3"
+	}
+}

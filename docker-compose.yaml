@@ -1,0 +1,89 @@
+name: directus-inngest
+services:
+  database:
+    container_name: directus-inngest-database
+    image: postgis/postgis:13-master
+    # Required when running on platform other than amd64, like Apple M1/M2:
+    # platform: linux/amd64
+    ports:
+      - 5432:5432
+    volumes:
+      - ./directus/data/database:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: directus
+      POSTGRES_PASSWORD: directus
+      POSTGRES_DB: directus
+    networks:
+      - backend-network
+
+  cache:
+    container_name: directus-inngest-cache
+    image: redis:6
+    networks:
+      - backend-network
+
+  directus:
+    container_name: directus-inngest
+    image: directus/directus:11.4.0
+    ports:
+      - 8088:8088
+    volumes:
+      - ./directus/uploads:/directus/uploads
+      - ./directus/extensions:/directus/extensions
+      # Keep our Inngest queue in a separate folder for cleaner DX
+      - ./queue:/directus/extensions/queue
+    depends_on:
+      - cache
+      - database
+    networks:
+      - backend-network
+
+    env_file:
+      - .env
+    environment:
+      KEY: 255d861b-5ea1-5996-9aa3-922530ec40b1
+      SECRET: 6116487b-cda1-52c2-b5b5-c8022c45e263
+
+      DB_CLIENT: pg
+      DB_HOST: database
+      DB_PORT: '5432'
+      DB_DATABASE: directus
+      DB_USER: directus
+      DB_PASSWORD: directus
+
+      # Using port 8088 because I have 8 million Directus instances at 8055
+      PORT: 8088
+
+      # Inngest Config
+      INNGEST_BASE_URL: 'http://inngest:8288'
+      INNGEST_DEV: ${INNGEST_DEV}
+      INNGEST_EVENT_KEY: ${INNGEST_EVENT_KEY}
+      INNGEST_SIGNING_KEY: ${INNGEST_SIGNING_KEY}
+      DEEPL_API_KEY: ${DEEPL_API_KEY}
+
+      CACHE_ENABLED: 'true'
+      CACHE_STORE: redis
+      REDIS: 'redis://cache:6379'
+
+      ADMIN_EMAIL: admin@example.com
+      ADMIN_PASSWORD: d1r3ctu5
+      ADMIN_TOKEN: ${DIRECTUS_TOKEN}
+
+      WEBSOCKETS_ENABLED: 'true'
+
+      # These is helpful for local developement but should probably be removed in production
+      CORS_ENABLED: 'true'
+      EXTENSIONS_AUTO_RELOAD: 'true'
+
+  inngest:
+    container_name: directus-inngest-inngest
+    image: inngest/inngest:latest
+    command: 'inngest dev -u http://directus:8088/inngest'
+    ports:
+      - '8288:8288'
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+    driver: bridge

@@ -1,0 +1,85 @@
+[
+  {
+    "id": "dab2c341-5ce5-42da-872f-40e596c4db16",
+    "bundle": null,
+    "meta": {
+      "enabled": true,
+      "id": "dab2c341-5ce5-42da-872f-40e596c4db16",
+      "folder": "9621987d-012d-475a-bd7f-e293cac7b077",
+      "source": "registry",
+      "bundle": null
+    },
+    "schema": {
+      "path": "/directus/extensions/.registry/9621987d-012d-475a-bd7f-e293cac7b077",
+      "name": "directus-extension-group-tabs-interface",
+      "version": "2.1.0",
+      "type": "interface",
+      "entrypoint": "dist/index.js",
+      "host": "^10.1.0",
+      "local": true
+    }
+  },
+  {
+    "id": "f9abfb1b-c1aa-47bd-9c37-2025c52e03ab",
+    "bundle": null,
+    "meta": {
+      "enabled": true,
+      "id": "f9abfb1b-c1aa-47bd-9c37-2025c52e03ab",
+      "folder": "queue",
+      "source": "local",
+      "bundle": null
+    },
+    "schema": {
+      "path": "/directus/extensions/queue",
+      "name": "queue",
+      "version": "1.0.0",
+      "type": "bundle",
+      "entrypoint": {
+        "app": "dist/app.js",
+        "api": "dist/api.js"
+      },
+      "entries": [
+        {
+          "name": "inngest",
+          "type": "endpoint"
+        },
+        {
+          "name": "hooks",
+          "type": "hook"
+        }
+      ],
+      "host": "^10.10.0",
+      "local": true
+    }
+  },
+  {
+    "id": "05d00912-6af8-410d-8653-b9941c67184d",
+    "bundle": "f9abfb1b-c1aa-47bd-9c37-2025c52e03ab",
+    "meta": {
+      "enabled": true,
+      "id": "05d00912-6af8-410d-8653-b9941c67184d",
+      "folder": "inngest",
+      "source": "local",
+      "bundle": "f9abfb1b-c1aa-47bd-9c37-2025c52e03ab"
+    },
+    "schema": {
+      "name": "inngest",
+      "type": "endpoint"
+    }
+  },
+  {
+    "id": "6e8ea6c6-3e2b-41b1-9ffb-edb7fc6cc2f7",
+    "bundle": "f9abfb1b-c1aa-47bd-9c37-2025c52e03ab",
+    "meta": {
+      "enabled": true,
+      "id": "6e8ea6c6-3e2b-41b1-9ffb-edb7fc6cc2f7",
+      "folder": "hooks",
+      "source": "local",
+      "bundle": "f9abfb1b-c1aa-47bd-9c37-2025c52e03ab"
+    },
+    "schema": {
+      "name": "hooks",
+      "type": "hook"
+    }
+  }
+]

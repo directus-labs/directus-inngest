@@ -1,0 +1,132 @@
+[
+  {
+    "collection": "posts",
+    "field": "created_by",
+    "related_collection": "directus_users",
+    "schema": {
+      "constraint_name": "posts_created_by_foreign",
+      "table": "posts",
+      "column": "created_by",
+      "foreign_key_schema": "public",
+      "foreign_key_table": "directus_users",
+      "foreign_key_column": "id",
+      "on_update": "NO ACTION",
+      "on_delete": "NO ACTION"
+    },
+    "meta": {
+      "many_collection": "posts",
+      "many_field": "created_by",
+      "one_collection": "directus_users",
+      "one_field": null,
+      "one_collection_field": null,
+      "one_allowed_collections": null,
+      "junction_field": null,
+      "sort_field": null,
+      "one_deselect_action": "nullify"
+    }
+  },
+  {
+    "collection": "posts",
+    "field": "updated_by",
+    "related_collection": "directus_users",
+    "schema": {
+      "constraint_name": "posts_updated_by_foreign",
+      "table": "posts",
+      "column": "updated_by",
+      "foreign_key_schema": "public",
+      "foreign_key_table": "directus_users",
+      "foreign_key_column": "id",
+      "on_update": "NO ACTION",
+      "on_delete": "NO ACTION"
+    },
+    "meta": {
+      "many_collection": "posts",
+      "many_field": "updated_by",
+      "one_collection": "directus_users",
+      "one_field": null,
+      "one_collection_field": null,
+      "one_allowed_collections": null,
+      "junction_field": null,
+      "sort_field": null,
+      "one_deselect_action": "nullify"
+    }
+  },
+  {
+    "collection": "posts",
+    "field": "default_langugage",
+    "related_collection": "languages",
+    "schema": {
+      "constraint_name": "posts_default_langugage_foreign",
+      "table": "posts",
+      "column": "default_langugage",
+      "foreign_key_schema": "public",
+      "foreign_key_table": "languages",
+      "foreign_key_column": "code",
+      "on_update": "NO ACTION",
+      "on_delete": "SET NULL"
+    },
+    "meta": {
+      "many_collection": "posts",
+      "many_field": "default_langugage",
+      "one_collection": "languages",
+      "one_field": null,
+      "one_collection_field": null,
+      "one_allowed_collections": null,
+      "junction_field": null,
+      "sort_field": null,
+      "one_deselect_action": "nullify"
+    }
+  },
+  {
+    "collection": "post_translations",
+    "field": "language",
+    "related_collection": "languages",
+    "schema": {
+      "constraint_name": "post_translations_language_foreign",
+      "table": "post_translations",
+      "column": "language",
+      "foreign_key_schema": "public",
+      "foreign_key_table": "languages",
+      "foreign_key_column": "code",
+      "on_update": "NO ACTION",
+      "on_delete": "SET NULL"
+    },
+    "meta": {
+      "many_collection": "post_translations",
+      "many_field": "language",
+      "one_collection": "languages",
+      "one_field": null,
+      "one_collection_field": null,
+      "one_allowed_collections": null,
+      "junction_field": "post",
+      "sort_field": null,
+      "one_deselect_action": "nullify"
+    }
+  },
+  {
+    "collection": "post_translations",
+    "field": "post",
+    "related_collection": "posts",
+    "schema": {
+      "constraint_name": "post_translations_post_foreign",
+      "table": "post_translations",
+      "column": "post",
+      "foreign_key_schema": "public",
+      "foreign_key_table": "posts",
+      "foreign_key_column": "id",
+      "on_update": "NO ACTION",
+      "on_delete": "CASCADE"
+    },
+    "meta": {
+      "many_collection": "post_translations",
+      "many_field": "post",
+      "one_collection": "posts",
+      "one_field": "translations",
+      "one_collection_field": null,
+      "one_allowed_collections": null,
+      "junction_field": "language",
+      "sort_field": null,
+      "one_deselect_action": "nullify"
+    }
+  }
+]

@@ -1,0 +1,48 @@
+# Node dependencies
+node_modules/
+
+# ESLint
+.eslintcache
+
+# Logs
+logs/
+*.log
+
+# Misc
+.DS_Store
+.fleet/
+.idea/
+.direnv/
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Local DBs
+.db
+
+# Directus
+/extensions/**/dist/
+**/data/database/
+**/directus/uploads
+api/data
+**/extensions/.registry
+n8n
+
+# Get rid of any image transformations while keeping the original
+/**/uploads/*__*.*
+
+# IDEs / Editors
+.devcontainer/
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.code-workspace
+.history/
+*.sublime-settings
+.*.swp
+
+# Environments / Workspaces
+.gitpod.yml
+.netlify

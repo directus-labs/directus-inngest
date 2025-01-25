@@ -1,0 +1,44 @@
+[
+  {
+    "code": "de-DE",
+    "name": "German",
+    "direction": "ltr",
+    "deepl_code": "DE"
+  },
+  {
+    "code": "en-US",
+    "name": "English",
+    "direction": "ltr",
+    "deepl_code": "EN-US"
+  },
+  {
+    "code": "es-ES",
+    "name": "Spanish",
+    "direction": "ltr",
+    "deepl_code": "ES"
+  },
+  {
+    "code": "fr-FR",
+    "name": "French",
+    "direction": "ltr",
+    "deepl_code": "FR"
+  },
+  {
+    "code": "it-IT",
+    "name": "Italian",
+    "direction": "ltr",
+    "deepl_code": "IT"
+  },
+  {
+    "code": "pt-BR",
+    "name": "Portuguese",
+    "direction": "ltr",
+    "deepl_code": "PT-BR"
+  },
+  {
+    "code": "ru-RU",
+    "name": "Russian",
+    "direction": "ltr",
+    "deepl_code": "RU"
+  }
+]

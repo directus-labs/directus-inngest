@@ -1,0 +1,30 @@
+{
+	"name": "directus-with-inngest",
+	"type": "module",
+	"version": "1.0.0",
+	"private": true,
+	"packageManager": "pnpm@9.15.4",
+	"description": "Example of using Inngest with Directus",
+	"author": "",
+	"license": "ISC",
+	"keywords": [],
+	"main": "index.js",
+	"scripts": {
+		"lint": "eslint --flag unstable_config_lookup_from_file --cache .",
+		"lint:fix": "pnpm run lint --fix",
+		"test:unit": "pnpm run --recursive test:unit --watch=false",
+		"generate:types": "pnpm run ./scripts/generate-types.js",
+		"queue:dev": "cd ./queue && pnpm run dev",
+		"queue:build": "cd ./queue && pnpm run build"
+	},
+	"devDependencies": {
+		"@directus/eslint-config": "github:directus/eslint-config#hannes/temp-workaround",
+		"directus-sdk-typegen": "^0.1.9",
+		"dotenv": "^16.4.7",
+		"eslint": "^9.18.0",
+		"jiti": "^2.4.2"
+	},
+	"resolutions": {
+		"chokidar": "^3"
+	}
+}
