@@ -65,7 +65,21 @@ INNGEST_EVENT_KEY=your_event_key
 INNGEST_SIGNING_KEY=your_signing_key
 ```
 
-### 3. Start the Docker services
+### 3. Start the queue (development)
+
+You need to either run the queue in development mode or build it for production in order for the translation workflow to actually run and the extension to be loaded in Directus.
+
+```bash
+pnpm run queue:dev
+```
+
+You can also build the queue for production:
+
+```bash
+pnpm run queue:build
+```
+
+### 4. Start the Docker services
 
 ```bash
 docker compose up
@@ -76,7 +90,7 @@ These ports are configurable in the `docker-compose.yml` file.
 
 Note: The `8088` port is just an arbitray choice because I have too many local Directus instances running on the default port of `8055`.
 
-### 4. Apply the template
+### 5. Apply the template
 
 This would only be done once, and only if you are applying the template for the first time. Do not repeat this step.
 
@@ -85,7 +99,7 @@ This template provides a multilingual content management foundation using Direct
 To apply the template, ensure your Directus instance is fresh and hasn't been configured with any conflicting collections. The template will create the necessary collections for posts, languages, and translations, along with their relationships and field configurations. After application, you can extend the schema further based on your specific needs while maintaining the core multilingual functionality.
 
 ```bash
-npx directus-template-cli@latest apply -p --directusUrl="http://localhost:8088" --directusToken="admin-token-here" --templateDir="./directus/template" --templateType="local"
+npx directus-template-cli@latest apply -p --directusUrl="http://localhost:8088" --directusToken="admin-token-here" --templateLocation="./directus/template" --templateType="local"
 ```
 
 ### 5. Start the queue (development)
