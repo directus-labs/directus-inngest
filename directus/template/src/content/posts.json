@@ -1,41 +1,15 @@
 [
-  {
-    "id": "26e80579-fd01-476f-9fcc-41f5814d3ff5",
-    "status": "draft",
-    "created_by": "848aa691-8297-42cd-ba62-ced5d7d6331c",
-    "created_at": "2025-01-25T00:23:57.735Z",
-    "updated_by": "848aa691-8297-42cd-ba62-ced5d7d6331c",
-    "updated_at": "2025-01-25T00:26:18.559Z",
-    "title": "Directus + Inngest Rocks",
-    "slug": "directus-with-inngest-rocks",
-    "content": "<p>Directus gives you a beautiful CMS + a robust backend with APIs, auth, permissions, and more. Inngest let's you quickly build queues, background jobs, and code based workflow engines that just \"run\".</p>",
-    "default_langugage": "en-US",
-    "translations": [
-      "187e665a-d98f-4367-9de5-3dfe846740f8",
-      "2697b1ee-2934-43c4-8ec8-dde235197a2f",
-      "369f2218-e3e8-4c05-9598-d5593e53672d",
-      "3e19b579-57d5-4085-bba9-d9f5e25164a2",
-      "40080059-e5c0-485e-8149-6bf510edf5b7",
-      "42e8f29f-bf4c-4abb-962e-ca7fa962ae8e",
-      "4307a4b5-6343-45f9-88fd-2963aaff5350",
-      "562f5138-f77e-4f37-b158-dcc9e1186ac8",
-      "62adad31-d61a-4dff-bd61-3a599df5e649",
-      "745e938f-e54f-4297-8f32-d76efcc6fa92",
-      "8087f2bf-08d9-4443-bccc-9a8e2317a548",
-      "82f394b1-568f-4a3e-952a-f95db5ea4ec9",
-      "935aac1d-2ece-4e8b-856c-b1a2e61db1f8",
-      "9bb0650f-981c-475d-ac59-eaf186c68293",
-      "a21e41e8-896a-4d42-8518-6924903610a2",
-      "a4dbc047-230e-41b0-a9c7-97927a370be2",
-      "abb703fc-1e0a-40a1-ac10-12cc09ecdbe9",
-      "b1832387-b067-4556-ae4b-423badb4604d",
-      "bda0bd68-c06e-4f95-b964-4a9888b6dcc8",
-      "c6030fb6-e136-4cae-b255-04765e35bd6c",
-      "d7749334-1e81-4101-b278-e70da21fde3e",
-      "e8118117-fcec-40e0-b47c-b37b53beb705",
-      "e9b85989-d17b-4818-aced-87b9ddf22178",
-      "ec379871-485a-455c-b899-82297a2bd1e4",
-      "ffe9fcd0-480f-4148-9a30-706ef070aaae"
-    ]
-  }
+	{
+		"id": "26e80579-fd01-476f-9fcc-41f5814d3ff5",
+		"status": "draft",
+		"created_by": "848aa691-8297-42cd-ba62-ced5d7d6331c",
+		"created_at": "2025-01-25T00:23:57.735Z",
+		"updated_by": "848aa691-8297-42cd-ba62-ced5d7d6331c",
+		"updated_at": "2025-01-25T00:26:18.559Z",
+		"title": "Directus + Inngest Rocks",
+		"slug": "directus-with-inngest-rocks",
+		"content": "<p>Directus gives you a beautiful CMS + a robust backend with APIs, auth, permissions, and more. Inngest let's you quickly build queues, background jobs, and code based workflow engines that just \"run\".</p>",
+		"default_langugage": "en-US",
+		"translations": []
+	}
 ]
