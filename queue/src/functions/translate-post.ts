@@ -1,9 +1,9 @@
 import type { Accountability } from '@directus/types';
 import type { Language, Post, PostTranslation } from '../../../types/directus-schema';
-
 import type { DirectusContext, DirectusServices } from '../inngest/types';
-
 import * as deepl from 'deepl-node';
+
+import { NonRetriableError } from 'inngest';
 
 import { inngest } from '../inngest/client';
 
@@ -38,7 +38,11 @@ export default inngest.createFunction(
 		id: 'translate-post',
 		name: 'Generate translations whenever a post is updated or created',
 	},
-	{ event: 'posts/generate-translations' },
+	// If a function has multiple triggers, you pass an array of objects instead of a single object
+	[
+		{ event: 'directus/posts.items.update' },
+		{ event: 'directus/posts.items.create' },
+	],
 	async ({ event, step, directus }) => {
 		const { services, getSchema, env } = directus as DirectusContext;
 
@@ -112,7 +116,7 @@ export default inngest.createFunction(
 				return Array.isArray(posts) ? posts : [];
 			}
 			catch (error) {
-				throw new Error(`Failed fetching posts: ${(error as Error).message}`);
+				throw new NonRetriableError(`Failed fetching posts: ${(error as Error).message}`);
 			}
 		});
 
@@ -136,7 +140,7 @@ export default inngest.createFunction(
 				return langs;
 			}
 			catch (error) {
-				throw new Error(`Failed fetching languages: ${(error as Error).message}`);
+				throw new NonRetriableError(`Failed fetching languages: ${(error as Error).message}`);
 			}
 		});
 
@@ -333,6 +337,7 @@ export default inngest.createFunction(
 					});
 
 					console.log('Upsert successful:', result);
+					return result;
 				});
 			}
 			catch (error) {
@@ -367,7 +372,7 @@ export default inngest.createFunction(
 					? `\nFailed translations: ${failureCount}. Check logs for details.`
 					: '';
 
-				await notificationsService.createOne({
+				const notification = await notificationsService.createOne({
 					status: 'inbox',
 					recipient: event.data.accountability!.user!,
 					subject: 'Translations Generated!',
@@ -375,6 +380,8 @@ export default inngest.createFunction(
 					collection: 'posts',
 					item: postIds,
 				});
+
+				return notification;
 			});
 		}
 
