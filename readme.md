@@ -147,8 +147,7 @@ The project uses Inngest for handling asynchronous tasks. Two main workflows are
 │ ├── src/
 │ │ ├── functions/ # Background job implementations
 │ │ ├── hooks/ # Directus event hooks to pass events to the queue
-│ │ ├── inngest/ # Inngest configuration
-│ │ └── utils/ # Shared utilities
+│ │ └── inngest/ # Inngest configuration
 ├── scripts/ # Development utilities
 ├── types/ # Generated TypeScript types
 └── .env # Environment variables
