@@ -42,30 +42,27 @@ export default inngest.createFunction(
 	async ({ event, step, directus }) => {
 		const { services, getSchema, env } = directus as DirectusContext;
 
-		// 1. Normalize keys into an array
-		const postKeys = await step.run('normalize-keys', async () => {
-			const eventType = event.data?.event?.event as 'posts.items.create' | 'posts.items.update' | undefined;
+		// 1. Normalize keys into an array -- code that doesn't mutate external state or depend on external state, doesn't need to be wrapped in a step
+		let postKeys: string[] | undefined;
+		const eventType = event.data?.event?.event as 'posts.items.create' | 'posts.items.update' | undefined;
 
-			if (!eventType) {
-				return [];
-			}
-
-			if (eventType === 'posts.items.create') {
-				// Create events receive a single `key`
-				const singleKey = [event.data.event.key].filter(Boolean);
-				return singleKey;
-			}
-
-			if (eventType === 'posts.items.update') {
-				// Update events receive an array of `keys`
-				const keys = (event.data.event.keys || []).filter(Boolean);
-				return keys;
-			}
-
+		if (!eventType) {
 			return [];
-		});
+		}
 
-		if (postKeys.length === 0) {
+		if (eventType === 'posts.items.create') {
+			// Create events receive a single `key`
+			const singleKey = [event.data.event.key].filter(Boolean);
+			postKeys = singleKey;
+		}
+
+		if (eventType === 'posts.items.update') {
+			// Update events receive an array of `keys`
+			const keys = (event.data.event.keys || []).filter(Boolean);
+			postKeys = keys;
+		}
+
+		if (!postKeys || postKeys.length === 0) {
 			return {
 				success: false,
 				result: 'No valid post keys to process.',
@@ -73,16 +70,14 @@ export default inngest.createFunction(
 		}
 
 		// 2. Decide if translations are necessary
-		const shouldGenerateTranslations = await step.run('decide-if-changed', async () => {
-			const payload = event.data?.event?.payload || {};
+		const payload = event.data?.event?.payload || {};
 
-			// Check if any translatable field has content in the payload
-			const relevantChange = TRANSLATABLE_FIELDS.some((field) =>
-				payload[field] !== undefined && payload[field] !== null,
-			);
+		// Check if any translatable field has content in the payload
+		const relevantChange = TRANSLATABLE_FIELDS.some((field) =>
+			payload[field] !== undefined && payload[field] !== null,
+		);
 
-			return relevantChange;
-		});
+		const shouldGenerateTranslations = relevantChange;
 
 		if (!shouldGenerateTranslations) {
 			// Note: You can force skipping this check during debugging if you suspect
@@ -201,12 +196,12 @@ export default inngest.createFunction(
 					let hasFieldsToTranslate = false;
 
 					// Only include fields that were changed in the payload
-					TRANSLATABLE_FIELDS.forEach((field) => {
+					for (const field of TRANSLATABLE_FIELDS) {
 						if (payload[field] !== undefined && payload[field] !== null) {
 							translationItem[field] = payload[field];
 							hasFieldsToTranslate = true;
 						}
-					});
+					}
 
 					if (hasFieldsToTranslate) {
 						console.log(`Adding translation item for language ${language.code}:`, translationItem);
