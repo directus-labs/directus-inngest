@@ -24,8 +24,7 @@ services:
 
   directus:
     container_name: directus-inngest
-    image: directus/directus:11.4.0
-    # I'm using port 8088 because I have 8 million Directus instances at 8055
+    image: directus/directus:11.5.1
     ports:
       - 8088:8088
     volumes:
@@ -77,8 +76,9 @@ services:
       EXTENSIONS_AUTO_RELOAD: 'true'
 
   inngest:
+    # Inngest Dev Server running locally for rapid development. Recommended to use Inngest Cloud for production. Important to note that your functions all run in your same container / instance - no matter if you use Inngest Cloud or not.
     container_name: directus-inngest-inngest
-    image: inngest/inngest:latest
+    image: inngest/inngest:v1.5.5
     command: 'inngest dev -u http://directus:8088/inngest'
     ports:
       - '8288:8288'
