@@ -25,6 +25,7 @@ services:
   directus:
     container_name: directus-inngest
     image: directus/directus:11.4.0
+    # I'm using port 8088 because I have 8 million Directus instances at 8055
     ports:
       - 8088:8088
     volumes:
