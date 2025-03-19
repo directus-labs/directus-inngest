@@ -5,7 +5,7 @@ import { inngest } from '../inngest/client';
 export default defineHook(({ action }) => {
 	action('posts.items.update', (event, context: EventContext) => {
 		inngest.send({
-			name: 'posts/generate-translations',
+			name: 'directus/posts.items.update',
 			data: {
 				event,
 				accountability: context.accountability,
@@ -15,7 +15,7 @@ export default defineHook(({ action }) => {
 
 	action('posts.items.create', (event, context: EventContext) => {
 		inngest.send({
-			name: 'posts/generate-translations',
+			name: 'directus/posts.items.create',
 			data: {
 				event,
 				accountability: context.accountability,
@@ -26,7 +26,7 @@ export default defineHook(({ action }) => {
 	action('files.upload', (event, context: EventContext) => {
 		if (event.collection === 'directus_files' && event.payload.type.startsWith('image/')) {
 			inngest.send({
-				name: 'assets/pregenerate-transforms',
+				name: 'directus/files.upload',
 				data: {
 					event,
 					accountability: context.accountability,

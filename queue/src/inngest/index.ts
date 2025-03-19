@@ -13,6 +13,7 @@ export default defineEndpoint({
 	id: 'inngest',
 
 	handler: (router: Router, context: DirectusContext) => {
+		// Pass the Directus context to the Inngest client
 		setDirectusContext(context);
 
 		const handler = serve({

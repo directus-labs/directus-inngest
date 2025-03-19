@@ -9,7 +9,7 @@ export default inngest.createFunction(
 		concurrency: 1,
 
 	},
-	{ event: 'assets/pregenerate-transforms' },
+	{ event: 'directus/files.upload' },
 	async ({ event, step, directus }) => {
 		const { services, getSchema } = directus as DirectusContext;
 		const { AssetsService, SettingsService } = services;
