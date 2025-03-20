@@ -5,6 +5,7 @@ import { inngest } from '../inngest/client';
 export default defineHook(({ action }) => {
 	action('posts.items.update', (event, context: EventContext) => {
 		inngest.send({
+			// It's recommend to mirror the Directus event name in the Inngest event name so if you want to trigger multiple fucntions for the same event. It's makes it easier to understand and debug.
 			name: 'directus/posts.items.update',
 			data: {
 				event,

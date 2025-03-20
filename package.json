@@ -18,7 +18,7 @@
 		"queue:build": "cd ./queue && pnpm run build"
 	},
 	"devDependencies": {
-		"@directus/eslint-config": "github:directus/eslint-config#hannes/temp-workaround",
+		"@directus/eslint-config": "^0.1.0",
 		"directus-sdk-typegen": "^0.1.9",
 		"dotenv": "^16.4.7",
 		"eslint": "^9.18.0",

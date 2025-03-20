@@ -1,4 +1,4 @@
-import type { DirectusContext } from '../inngest/types';
+import type { DirectusContext } from '../types/services';
 import { inngest } from '../inngest/client';
 
 export default inngest.createFunction(

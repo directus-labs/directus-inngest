@@ -14,7 +14,7 @@ async function generateTypes() {
 
 	try {
 		await generateDirectusTypes({
-			outputPath: './types/directus-schema.ts',
+			outputPath: './queue/src/inngest/directus-schema.ts',
 			directusUrl,
 			directusToken,
 		});

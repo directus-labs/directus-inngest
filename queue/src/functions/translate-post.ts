@@ -1,6 +1,6 @@
 import type { Accountability } from '@directus/types';
-import type { Language, Post, PostTranslation } from '../../../types/directus-schema';
-import type { DirectusContext, DirectusServices } from '../inngest/types';
+import type { Language, Post, PostTranslation } from '../types/directus-schema';
+import type { DirectusContext, DirectusServices } from '../types/services';
 import * as deepl from 'deepl-node';
 
 import { NonRetriableError } from 'inngest';
@@ -238,75 +238,70 @@ export default inngest.createFunction(
 		const translatedItems: PostTranslation[] = [];
 		const failedTranslations: Array<{ post: string; language?: string; error: string }> = [];
 
-		// 7. Translate each item
-		for (const item of translationsToUpsert) {
+		// 7. Translate all items in parallel
+		const translationResults = await Promise.all(translationsToUpsert.map((item) => {
 			const stepId = `translate-${item.post}-${item.language}`;
 
-			try {
-				const translation = await step.run(stepId, async () => {
-					console.log(`Starting translation for ${item.language}:`, item);
+			return step.run(stepId, async () => {
+				console.log(`Starting translation for ${item.language}:`, item);
 
-					if (!item.deeplCode) {
-						throw new Error(`Missing DeepL code for language '${item.language ?? ''}'`);
-					}
+				if (!item.deeplCode) {
+					throw new Error(`Missing DeepL code for language '${item.language ?? ''}'`);
+				}
 
-					const targetLang = item.deeplCode as deepl.TargetLanguageCode;
-					const fieldsToTranslate = TRANSLATABLE_FIELDS.filter((field) => item[field] !== undefined);
+				const targetLang = item.deeplCode as deepl.TargetLanguageCode;
+				const fieldsToTranslate = TRANSLATABLE_FIELDS.filter((field) => item[field] !== undefined);
 
-					if (fieldsToTranslate.length === 0) {
-						throw new Error('No fields to translate');
-					}
+				if (fieldsToTranslate.length === 0) {
+					throw new Error('No fields to translate');
+				}
 
-					console.log(`Translating fields ${fieldsToTranslate.join(', ')} to ${targetLang}`);
+				console.log(`Translating fields ${fieldsToTranslate.join(', ')} to ${targetLang}`);
 
-					const results = await Promise.allSettled(
-						fieldsToTranslate.map(async (field) => {
-							const value = item[field];
+				const results = await Promise.allSettled(
+					fieldsToTranslate.map(async (field) => {
+						const value = item[field];
 
-							if (!value) {
-								console.log(`Empty value for field ${field}, skipping`);
-								return { field, translatedValue: '' };
-							}
+						if (!value) {
+							console.log(`Empty value for field ${field}, skipping`);
+							return { field, translatedValue: '' };
+						}
 
-							console.log(`Translating ${field} with value:`, value);
-							const result = await translator.translateText(value, null, targetLang, DEEPL_PARAMS[field]);
-							console.log(`Translation result for ${field}:`, result.text);
+						console.log(`Translating ${field} with value:`, value);
+						const result = await translator.translateText(value, null, targetLang, DEEPL_PARAMS[field]);
+						console.log(`Translation result for ${field}:`, result.text);
 
-							const finalText = field === 'slug'
-								? result.text.toLowerCase().replace(/\s+/g, '-')
-								: result.text;
+						const finalText = field === 'slug'
+							? result.text.toLowerCase().replace(/\s+/g, '-')
+							: result.text;
 
-							return { field, translatedValue: finalText };
-						}),
-					);
+						return { field, translatedValue: finalText };
+					}),
+				);
 
-					const fulfilled = results.filter((r) => r.status === 'fulfilled') as PromiseFulfilledResult<{
-						field: TranslatableField;
-						translatedValue: string;
-					}>[];
+				const fulfilled = results.filter((r) => r.status === 'fulfilled') as PromiseFulfilledResult<{
+					field: TranslatableField;
+					translatedValue: string;
+				}>[];
 
-					if (!fulfilled.length) {
-						throw new Error(`All text translations failed for item related to post: ${item.post}`);
-					}
+				if (!fulfilled.length) {
+					throw new Error(`All text translations failed for item related to post: ${item.post}`);
+				}
 
-					const { deeplCode, ...translationRecord } = item;
+				const { deeplCode, ...translationRecord } = item;
 
-					const updates = Object.fromEntries(
-						fulfilled.map(({ value: { field, translatedValue } }) => [field, translatedValue]),
-					);
+				const updates = Object.fromEntries(
+					fulfilled.map(({ value: { field, translatedValue } }) => [field, translatedValue]),
+				);
 
-					const finalResult = {
-						...translationRecord,
-						...updates,
-					} as PostTranslation;
+				const finalResult = {
+					...translationRecord,
+					...updates,
+				} as PostTranslation;
 
-					console.log('Translation successful:', finalResult);
-					return finalResult;
-				});
-
-				translatedItems.push(translation);
-			}
-			catch (error) {
+				console.log('Translation successful:', finalResult);
+				return finalResult;
+			}).catch((error) => {
 				console.error(`Translation failed for ${item.language}:`, error);
 
 				failedTranslations.push({
@@ -314,33 +309,35 @@ export default inngest.createFunction(
 					language: String(item.language),
 					error: error.message || String(error),
 				});
-			}
-		}
+
+				return null;
+			});
+		}));
+
+		// Filter out nulls (failed translations)
+		translatedItems.push(...translationResults.filter(Boolean) as PostTranslation[]);
 
 		console.log(`Translations complete. Successful: ${translatedItems.length}, Failed: ${failedTranslations.length}`);
 
-		// 8. Upsert translations
-		for (const translation of translatedItems) {
+		// 8. Upsert all translations in parallel
+		Promise.all(translatedItems.map((translation) => {
 			const stepId = `upsert-${translation.post}-${translation.language}`;
 
-			try {
-				await step.run(stepId, async () => {
-					console.log(`Upserting translation for ${translation.language}:`, translation);
+			return step.run(stepId, async () => {
+				console.log(`Upserting translation for ${translation.language}:`, translation);
 
-					const result = await translationsService.upsertOne<PostTranslation>({
-						id: translation.id,
-						post: translation.post,
-						language: translation.language,
-						title: translation.title,
-						content: translation.content,
-						slug: translation.slug,
-					});
-
-					console.log('Upsert successful:', result);
-					return result;
+				const result = await translationsService.upsertOne<PostTranslation>({
+					id: translation.id,
+					post: translation.post,
+					language: translation.language,
+					title: translation.title,
+					content: translation.content,
+					slug: translation.slug,
 				});
-			}
-			catch (error) {
+
+				console.log('Upsert successful:', result);
+				return result;
+			}).catch((error) => {
 				console.error(`Upsert failed for ${translation.language}:`, error);
 
 				failedTranslations.push({
@@ -350,8 +347,10 @@ export default inngest.createFunction(
 						: translation.language?.code || '',
 					error: `Upsert failed: ${(error as Error).message}`,
 				});
-			}
-		}
+
+				return null;
+			});
+		}));
 
 		// 9. Create notification if user is defined
 		if (event.data.accountability?.user) {
