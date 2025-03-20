@@ -122,7 +122,7 @@ export default inngest.createFunction(
 
 		console.log(`Found ${postsWithTranslations.length} post records with translations:`);
 
-		if (!postsWithTranslations.length) {
+		if (postsWithTranslations.length === 0) {
 			return {
 				success: false,
 				postIds: postKeys,
@@ -146,7 +146,7 @@ export default inngest.createFunction(
 
 		console.log('Languages found:', availableLanguages.map((l) => l.code));
 
-		if (!availableLanguages.length) {
+		if (availableLanguages.length === 0) {
 			return {
 				success: false,
 				postIds: postKeys,
@@ -272,7 +272,7 @@ export default inngest.createFunction(
 						console.log(`Translation result for ${field}:`, result.text);
 
 						const finalText = field === 'slug'
-							? result.text.toLowerCase().replace(/\s+/g, '-')
+							? result.text.toLowerCase().replaceAll(/\s+/g, '-')
 							: result.text;
 
 						return { field, translatedValue: finalText };
@@ -284,7 +284,7 @@ export default inngest.createFunction(
 					translatedValue: string;
 				}>[];
 
-				if (!fulfilled.length) {
+				if (fulfilled.length === 0) {
 					throw new Error(`All text translations failed for item related to post: ${item.post}`);
 				}
 

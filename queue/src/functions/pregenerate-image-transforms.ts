@@ -30,9 +30,7 @@ export default inngest.createFunction(
 
 		// Get the presets from the Directus project settings
 		const presets = await step.run('get-settings', async () => {
-			const settings = await settingsService.readSingleton({
-
-			});
+			const settings = await settingsService.readSingleton({});
 
 			return settings.storage_asset_presets;
 		});

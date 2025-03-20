@@ -36,7 +36,6 @@ export function setDirectusContext(context: DirectusContext): void {
 	directusContext = context;
 }
 
-
 // Singleton Pattern - this ensures that we only create the Inngest client once
 function getInngestClient(): Inngest<InngestContext & { id: string }> {
 	if (!inngestClient) {
